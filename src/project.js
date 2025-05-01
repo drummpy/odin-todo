@@ -1,65 +1,36 @@
 //Create Project Object
 export function Project(titleValue, descriptionValue) {
-  const todoList = [];
+  const todoIds = [];
   const projectId = crypto.randomUUID();
 
-  const getToDoList = () => todoList;
-
   const getProjectId = () => projectId;
+  const getTitle = () => titleValue;
+  const getDescription = () => descriptionValue;
+  const getToDoReferences = () => todoIds;
 
-  const addToDo = (todo) => {
-    if (todo && todo.id) {
-      todoList.push(todo);
-      console.log(`Todo if id ${todo.id} added`);
+  const addToDoReference = (id) => {
+    if (id && !todoIds.includes(id)) {
+      todoIds.push(id);
+      console.log(`Todo id ${id} added`);
     } else {
-      console.log("Unable to add ToDo, invalid object");
+      console.log("Unable to add ToDoId to project ID list");
     }
   };
 
-  const removeToDo = (id) => {
-    const index = todoList.findIndex((todo) => todo.id === id);
+  const removeToDoReference = (id) => {
+    const index = todoIds.findIndex((todoref) => todoref === id);
     if (index !== -1) {
-      todoList.splice(index, 1);
-      console.log(`Todo with id ${id} removed`);
+      todoIds.splice(index, 1);
+      console.log(`Id ${id} removed from project ID list`);
     }
-  };
-
-  const toggleToDoComplete = (id) => {
-    const found = todoList.find((todo) => id === todo.id);
-    if (!found) {
-      console.warn(`ToDo with id ${id} not found.`);
-      return;
-    }
-    found.completed = !found.completed;
-    console.log(`Todo id ${id} switched completed flag to ${found.completed}`);
-  };
-
-  const getToDo = (id) => {
-    if (!id) {
-      console.warn(`Invalid id passed to getToDo: ${id}`);
-      return;
-    }
-    return todoList.find((todo) => id === todo.id);
-  };
-
-  const updateToDo = (id, updates) => {
-    const todo = todoList.find((todo) => id === todo.id);
-    if (!todo) {
-      console.warn(`Todo with id ${id} not found.`);
-      return;
-    }
-    Object.assign(todo, updates);
-    console.log(`Todo with id ${id} updated.`);
   };
 
   return {
-    title: titleValue,
-    description: descriptionValue,
-    getToDoList,
+    getTitle,
+    getDescription,
     getProjectId,
-    addToDo,
-    removeToDo,
-    toggleToDoComplete,
-    getToDo,
+    addToDoReference,
+    removeToDoReference,
+    getToDoReferences,
   };
 }
