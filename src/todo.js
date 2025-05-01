@@ -6,7 +6,7 @@ export function Todo(
   priorityValue
 ) {
   return {
-    id: crypto.randomUUID(), // or use Date.now() if needed
+    id: crypto.randomUUID(),
     title: titleValue,
     description: descriptionValue,
     dueDate: dueDateValue,
