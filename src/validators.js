@@ -1,3 +1,5 @@
+import { parseISO } from "date-fns";
+
 export const validateStringInputs = (...inputs) => {
   for (const input of inputs) {
     if (typeof input !== "string" || input.trim() === "") {
@@ -27,9 +29,14 @@ export const validateBooleanInputs = (...inputs) => {
 
 export const validateDateInputs = (...inputs) => {
   for (const input of inputs) {
-    if (!(input instanceof Date) || isNaN(input.getTime())) {
-      return false;
+    if (typeof input === "string") {
+      const parsedDate = parseISO(input);
+      if (!isValid(parsedDate)) {
+        return false; // Invalid string date
+      }
+    } else if (!(input instanceof Date) || isNaN(input.getTime())) {
+      return false; // Invalid Date object
     }
   }
-  return true;
+  return true; // All inputs are valid
 };
