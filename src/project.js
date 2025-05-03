@@ -6,7 +6,7 @@ export function Project(titleValue, descriptionValue) {
   const getProjectId = () => projectId;
   const getTitle = () => titleValue;
   const getDescription = () => descriptionValue;
-  const getToDoReferences = () => todoIds;
+  const getToDoReferences = () => [...todoIds];
 
   const addToDoReference = (id) => {
     if (id && !todoIds.includes(id)) {
