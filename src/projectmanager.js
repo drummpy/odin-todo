@@ -167,6 +167,8 @@ export function ProjectManager() {
     );
   };
 
+  console.log("Project Manager initialized.");
+
   return {
     listAllTodo,
     listAllProjects,
