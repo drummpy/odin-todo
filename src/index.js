@@ -1,3 +1,4 @@
+import "./styles.css";
 import { ProjectManager } from "./projectmanager";
 
 const project = ProjectManager();

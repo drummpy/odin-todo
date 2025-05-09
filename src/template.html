@@ -3,7 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Todos to Go</title>
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h1>Todos</h1>
+        <h3>Add Todo</h3>
+        <form id="todoForm">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" required />
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="3"></textarea>
+          <label for="dueDate">Due Date</label>
+          <input type="date" id="dueDate" name="dueDate" />
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+          <button type="submit">Add ToDo</button>
+        </form>
+        <hr />
+        <h3>Add Project</h3>
+        <form id="projectForm">
+          <label for="projectTitle">Project Title</label>
+          <input type="text" id="projectTitle" name="projectTitle" required />
+          <label for="projectDesc">Description</label>
+          <textarea id="projectDesc" name="projectDesc" rows="2"></textarea>
+          <button type="submit">Add Project</button>
+        </form>
+      </div>
+      <div class="content">
+        <div class="project-card">
+          <h3>Project Title</h3>
+          <p>Project description goes here...</p>
+          <div class="todo-list">
+            <div class="todo-card">
+              <div class="todo-header">
+                <h4>ToDo Title</h4>
+                <div class="todo-actions">
+                  <label>
+                    <input type="checkbox" />
+                    Done
+                  </label>
+                  <select>
+                    <option value="">Move to...</option>
+                    <option value="1">Project A</option>
+                    <option value="2">Project B</option>
+                  </select>
+                </div>
+              </div>
+              <p>Description of the todo.</p>
+              <small>Due: 2024-05-15 | Priority: High</small>
+            </div>
+            <div class="todo-card">
+              <h4>Another ToDo</h4>
+              <p>Another Description</p>
+              <small>Due: 2024-05-10 | Priority: Medium</small>
+            </div>
+          </div>
+        </div>
+        <div class="todo-card unassigned">
+          <h4>Unassigned ToDo</h4>
+          <p>This todo has no project.</p>
+          <small>Due: 2024-05-20 | Priority: Low</small>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
