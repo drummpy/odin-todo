@@ -1,0 +1,78 @@
+import { ProjectManager } from "./projectmanager";
+
+//Create UIController
+export function UIController() {
+  const content = document.querySelector(".content");
+  const toDoTitle = document.getElementById("title");
+  const toDoDescription = document.getElementById("description");
+  const toDoDate = document.getElementById("dueDate");
+  const toDoPriority = document.getElementById("priority");
+  const projectTitle = document.getElementById("projectTitle");
+  const projectDescription = document.getElementById("projectDesc");
+  const addToDoButton = document.getElementById("addToDoButton");
+  const addProjectButton = document.getElementById("addProjectButton");
+
+  // TODO: renderProject()
+  // TODO: renderTodo()
+  const renderTodo = (toDo, projectID = null) => {
+    const toDoDiv = document.createElement("div");
+    toDoDiv.classList.add("todo-card");
+
+    const projectOptions = ProjectManager.listAllProjects()
+      .map(
+        (project) =>
+          `<option value="${project.id}" ${
+            project.id === projectID ? "selected disabled" : ""
+          }>${project.title}</option>`
+      )
+      .join("");
+
+    toDoDiv.innerHTML = `
+        <div class="todo-header">
+            <h4>${toDo.title}</h4>
+            <div class="todo-actions">
+                <label>
+                <input type="checkbox" id="done-${toDo.id}"/>
+                Done
+                </label>
+                <select id="move-${toDo.id}">
+                ${projectOptions}
+                </select>
+            </div>
+        </div>
+        <p>${toDo.description}</p>
+        <small>Due: ${toDo.dueDate} | Priority: ${toDo.priority}</small>
+        `;
+    toDoDiv.id = toDo.id;
+
+    let parentContainer;
+    if (projectID) {
+      parentContainer = document.getElementById(`project-${projectID}-todos`);
+    } else {
+      parentContainer = document.getElementById("unassigned-todos");
+    }
+
+    if (parentContainer) {
+      parentContainer.innerHTML = "";
+      parentContainer.appendChild(toDoDiv);
+    } else {
+      console.warn(`Parent container not found for ToDo ID ${toDo.id}`);
+    }
+
+    const doneSelector = toDoDiv.querySelector(`#done-${toDo.id}`);
+    doneSelector.addEventListener("change", () => {
+      ProjectManager.toggleToDoComplete(toDo.id);
+      render();
+    });
+    const moveSelector = toDoDiv.querySelector(`#move-${toDo.id}`);
+    moveSelector.addEventListener("change", (e) => {
+      const newProjectID = e.target.value;
+      if (newProjectID) {
+        ProjectManager.moveToDoToProject(toDo.id, projectID, newProjectID);
+        render();
+      }
+    });
+  };
+  // TODO: clearUI()
+  // TODO: render()
+}
