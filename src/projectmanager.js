@@ -11,6 +11,13 @@ export function ProjectManager() {
   const listAllTodo = () => allTodos;
   const listAllProjects = () => allProjects;
 
+  const listUnassignedToDos = () => {
+    const assignedToDoIds = allProjects.flatMap((project) =>
+      project.getToDoReferences()
+    );
+    return allTodos.filter((todo) => !assignedToDoIds.includes(todo.id));
+  };
+
   const createToDo = (
     titleValue,
     descriptionValue,
@@ -181,5 +188,6 @@ export function ProjectManager() {
     deleteProject,
     assignToDoToProject,
     moveToDoToProject,
+    listUnassignedToDos,
   };
 }
