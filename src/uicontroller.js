@@ -1,6 +1,4 @@
 import { ProjectManager } from "./projectmanager";
-import { Project } from "./project";
-import { Todo } from "./todo";
 
 //Create UIController
 export function UIController() {
@@ -74,7 +72,6 @@ export function UIController() {
     }
 
     if (parentContainer) {
-      parentContainer.innerHTML = "";
       parentContainer.appendChild(toDoDiv);
     } else {
       console.warn(`Parent container not found for ToDo ID ${toDo.id}`);
@@ -94,6 +91,27 @@ export function UIController() {
       }
     });
   };
-  // TODO: clearUI()
+
+  const clearUI = () => {
+    content.innerHTML = "";
+  };
   // TODO: render()
+  const render = () => {
+    clearUI();
+
+    ProjectManager.listAllProjects().forEach((project) => {
+      renderProject(project);
+    });
+
+    const unassignedDiv = document.createElement("div");
+    unassignedDiv.id = "unnassigned-todos";
+    content.appendChild(unassignedDiv);
+
+    ProjectManager.listUnassignedToDos().forEach((todo) => {
+      renderTodo(todo);
+    });
+  };
+
+  // TODO: renderUnassignedTodo()
+  // TODO: write return statement
 }
