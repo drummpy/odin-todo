@@ -1,4 +1,6 @@
 import { ProjectManager } from "./projectmanager";
+import { Project } from "./project";
+import { Todo } from "./todo";
 
 //Create UIController
 export function UIController() {
@@ -12,8 +14,27 @@ export function UIController() {
   const addToDoButton = document.getElementById("addToDoButton");
   const addProjectButton = document.getElementById("addProjectButton");
 
-  // TODO: renderProject()
-  // TODO: renderTodo()
+  const renderProject = (project) => {
+    const projectDiv = document.createElement("div");
+    projectDiv.classList.add("project-card");
+
+    const projectHeader = `
+      <h3>${project.getTitle()}</h3>
+      <p>${project.getDescription()}</p>`;
+    projectDiv.innerHTML = projectHeader;
+
+    const toDoListDiv = document.createElement("div");
+    toDoListDiv.classList.add("todo-list");
+    toDoListDiv.id = `project-${project.id}-todos`;
+
+    projectDiv.appendChild(toDoListDiv);
+    content.appendChild(projectDiv);
+
+    project.getToDoReferences().forEach((todo) => {
+      renderTodo(todo, project.id);
+    });
+  };
+
   const renderTodo = (toDo, projectID = null) => {
     const toDoDiv = document.createElement("div");
     toDoDiv.classList.add("todo-card");
