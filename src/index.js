@@ -1,9 +1,6 @@
 import "./styles.css";
-import { ProjectManager } from "./projectmanager";
+import { UIController } from "./uicontroller";
 
-const project = ProjectManager();
+const ui = UIController();
 
-project.createToDo("Blob", "This is a blob", "1954-02-01", "High");
-console.log(project.listAllTodo());
-project.createProject("Hi", "Description of hi");
-console.log(project.listAllProjects());
+ui.render();
