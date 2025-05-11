@@ -12,6 +12,11 @@ export function UIController() {
   const addToDoButton = document.getElementById("addToDoButton");
   const addProjectButton = document.getElementById("addProjectButton");
 
+  window.addEventListener("DOMContentLoaded", () => {
+    const toDoDate = document.getElementById("dueDate");
+    toDoDate.valueAsDate = new Date();
+  });
+
   const renderProject = (project) => {
     const projectDiv = document.createElement("div");
     projectDiv.classList.add("project-card");
@@ -41,7 +46,7 @@ export function UIController() {
       .map(
         (project) =>
           `<option value="${project.id}" ${
-            project.id === projectID ? "selected disabled" : ""
+            project.id === projectID ? "selected" : ""
           }>${project.title}</option>`
       )
       .join("");
@@ -95,7 +100,7 @@ export function UIController() {
   const clearUI = () => {
     content.innerHTML = "";
   };
-  // TODO: render()
+
   const render = () => {
     clearUI();
 
@@ -104,7 +109,7 @@ export function UIController() {
     });
 
     const unassignedDiv = document.createElement("div");
-    unassignedDiv.id = "unnassigned-todos";
+    unassignedDiv.id = "unassigned-todos";
     content.appendChild(unassignedDiv);
 
     ProjectManager.listUnassignedToDos().forEach((todo) => {
@@ -112,6 +117,51 @@ export function UIController() {
     });
   };
 
-  // TODO: renderUnassignedTodo()
-  // TODO: write return statement
+  const clearToDoForm = () => {
+    toDoTitle.value = "";
+    toDoDescription.value = "";
+    toDoDate.value = "";
+    toDoPriority.value = "Low";
+  };
+
+  const clearProjectForm = () => {
+    projectTitle.value = "";
+    projectDescription.value = "";
+  };
+
+  addToDoButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    const title = toDoTitle.value;
+    const description = toDoDescription.value;
+    const date = toDoDate.value;
+    const priority = toDoPriority.value;
+
+    if (!title.trim()) {
+      alert("Please enter a title for your todo.");
+      return;
+    }
+
+    ProjectManager.createToDo(title, description, date, priority);
+    render();
+    clearToDoForm();
+  });
+
+  addProjectButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    const title = projectTitle.value;
+    const description = projectDescription.value;
+
+    if (!title.trim()) {
+      alert("Please enter a title for your project.");
+      return;
+    }
+
+    ProjectManager.createProject(title, description);
+    render();
+    clearProjectForm();
+  });
+
+  console.log("UI Initialized");
+
+  return { render };
 }
