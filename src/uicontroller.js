@@ -1,5 +1,7 @@
 import { ProjectManager } from "./projectmanager";
 
+const projectManager = ProjectManager();
+
 //Create UIController
 export function UIController() {
   const content = document.querySelector(".content");
@@ -28,26 +30,39 @@ export function UIController() {
 
     const toDoListDiv = document.createElement("div");
     toDoListDiv.classList.add("todo-list");
-    toDoListDiv.id = `project-${project.id}-todos`;
+    toDoListDiv.id = `project-${project.getProjectId()}-todos`;
 
     projectDiv.appendChild(toDoListDiv);
     content.appendChild(projectDiv);
 
-    project.getToDoReferences().forEach((todo) => {
-      renderTodo(todo, project.id);
+    // Debug: Log the Todos associated with the project
+    console.log(
+      `Rendering Todos for Project ID ${project.getProjectId()}:`,
+      project.getToDoReferences()
+    );
+
+    project.getToDoReferences().forEach((todoID) => {
+      const todo = projectManager.getToDo(todoID);
+      if (todo) {
+        renderTodo(todo, project.getProjectId());
+      } else {
+        console.warn(`Todo with ID ${todoID} not found.`);
+      }
     });
   };
 
   const renderTodo = (toDo, projectID = null) => {
+    console.log(`Rendering Todo: ${toDo.title}, Project ID: ${projectID}`);
     const toDoDiv = document.createElement("div");
     toDoDiv.classList.add("todo-card");
 
-    const projectOptions = ProjectManager.listAllProjects()
+    const projectOptions = projectManager
+      .listAllProjects()
       .map(
         (project) =>
-          `<option value="${project.id}" ${
-            project.id === projectID ? "selected" : ""
-          }>${project.title}</option>`
+          `<option value="${project.getProjectId()}" ${
+            project.getProjectId() === projectID ? "selected" : ""
+          }>${project.getTitle()}</option>`
       )
       .join("");
 
@@ -84,14 +99,14 @@ export function UIController() {
 
     const doneSelector = toDoDiv.querySelector(`#done-${toDo.id}`);
     doneSelector.addEventListener("change", () => {
-      ProjectManager.toggleToDoComplete(toDo.id);
+      projectManager.toggleToDoComplete(toDo.id);
       render();
     });
     const moveSelector = toDoDiv.querySelector(`#move-${toDo.id}`);
     moveSelector.addEventListener("change", (e) => {
       const newProjectID = e.target.value;
       if (newProjectID) {
-        ProjectManager.moveToDoToProject(toDo.id, projectID, newProjectID);
+        projectManager.moveToDoToProject(toDo.id, projectID, newProjectID);
         render();
       }
     });
@@ -104,7 +119,7 @@ export function UIController() {
   const render = () => {
     clearUI();
 
-    ProjectManager.listAllProjects().forEach((project) => {
+    projectManager.listAllProjects().forEach((project) => {
       renderProject(project);
     });
 
@@ -112,7 +127,7 @@ export function UIController() {
     unassignedDiv.id = "unassigned-todos";
     content.appendChild(unassignedDiv);
 
-    ProjectManager.listUnassignedToDos().forEach((todo) => {
+    projectManager.listUnassignedToDos().forEach((todo) => {
       renderTodo(todo);
     });
   };
@@ -141,7 +156,7 @@ export function UIController() {
       return;
     }
 
-    ProjectManager.createToDo(title, description, date, priority);
+    projectManager.createToDo(title, description, date, priority);
     render();
     clearToDoForm();
   });
@@ -156,12 +171,59 @@ export function UIController() {
       return;
     }
 
-    ProjectManager.createProject(title, description);
+    projectManager.createProject(title, description);
     render();
     clearProjectForm();
   });
 
   console.log("UI Initialized");
 
-  return { render };
+  const initializeSampleData = () => {
+    if (projectManager.listAllProjects().length === 0) {
+      const homeProject = projectManager.createProject(
+        "Home Tasks",
+        "Stuff to do around the house"
+      );
+      const workProject = projectManager.createProject(
+        "Work Projects",
+        "Things to handle at work"
+      );
+
+      console.log("Home Project:", homeProject);
+      console.log("Work Project:", workProject);
+      console.log(
+        "All Projects after initialization:",
+        projectManager.listAllProjects()
+      );
+
+      projectManager.createToDo(
+        "Do the laundry",
+        "Wash, dry, fold",
+        "2025-05-12",
+        "Medium",
+        homeProject.getProjectId()
+      );
+      projectManager.createToDo(
+        "Grocery shopping",
+        "Buy milk, eggs, bread",
+        "2025-05-11",
+        "Low",
+        homeProject.getProjectId()
+      );
+      projectManager.createToDo(
+        "Prepare presentation",
+        "Quarterly results",
+        "2025-05-14",
+        "High",
+        workProject.getProjectId()
+      );
+
+      console.log(
+        "All Todos after initialization:",
+        projectManager.listAllTodo()
+      );
+    }
+  };
+
+  return { render, initializeSampleData };
 }

@@ -9,7 +9,10 @@ export function ProjectManager() {
   let allProjects = [];
 
   const listAllTodo = () => allTodos;
-  const listAllProjects = () => allProjects;
+  const listAllProjects = () => {
+    console.log("Listing all projects:", allProjects); // Debugging log
+    return allProjects;
+  };
 
   const listUnassignedToDos = () => {
     const assignedToDoIds = allProjects.flatMap((project) =>
@@ -22,7 +25,8 @@ export function ProjectManager() {
     titleValue,
     descriptionValue,
     dueDateValue,
-    priorityValue
+    priorityValue,
+    projectID = null // Accept optional projectID
   ) => {
     if (!validateStringInputs(titleValue, descriptionValue, priorityValue)) {
       console.warn("Invalid string type entry when creating ToDo.");
@@ -43,6 +47,20 @@ export function ProjectManager() {
     );
     allTodos.push(newTodo);
     console.log(`Todo with title ${titleValue.trim()} added to Todo list.`);
+
+    // If a projectID is provided, associate the Todo with the project
+    if (projectID) {
+      const project = getProject(projectID);
+      if (project) {
+        project.addToDoReference(newTodo.id);
+        console.log(
+          `Todo with ID ${newTodo.id} associated with Project ID ${projectID}`
+        );
+      } else {
+        console.warn(`Project with ID ${projectID} not found.`);
+      }
+    }
+
     return newTodo;
   };
 
@@ -93,7 +111,8 @@ export function ProjectManager() {
     }
     const newProject = Project(title.trim(), description.trim());
     allProjects.push(newProject);
-    console.log(`Project with title ${title.trim()} added to project list.`);
+    console.log(`Project created:`, newProject);
+    console.log(`All projects:`, allProjects); // Debugging log
     return newProject;
   };
 
@@ -115,9 +134,12 @@ export function ProjectManager() {
   };
 
   const getProject = (id) => {
-    const project = allProjects.find((project) => project.id === id);
+    const project = allProjects.find(
+      (project) => project.getProjectId() === id
+    );
     if (!project) {
       console.warn(`Project with id ${id} not found!`);
+      console.log("Current projects:", allProjects); // Debugging log
       return null;
     }
     return project;
@@ -144,34 +166,31 @@ export function ProjectManager() {
   };
 
   const moveToDoToProject = (todoID, fromProjectId, toProjectId) => {
-    const fromproject = getProject(fromProjectId);
-    const toproject = getProject(toProjectId);
-
-    if (!fromproject || !toproject) {
-      console.warn(`One or both project IDs are invalid`);
+    const toProject = getProject(toProjectId);
+    if (!toProject) {
+      console.warn(`Target project ID ${toProjectId} is invalid.`);
       return;
     }
 
-    const fromrefs = fromproject.getToDoReferences();
-    const torefs = toproject.getToDoReferences();
+    if (fromProjectId) {
+      const fromProject = getProject(fromProjectId);
+      if (fromProject && fromProject.getToDoReferences().includes(todoID)) {
+        fromProject.removeToDoReference(todoID);
+      } else {
+        console.warn(
+          `Todo with ID ${todoID} not found in project ${fromProjectId}`
+        );
+      }
+    }
 
-    if (torefs.includes(todoID)) {
+    if (!toProject.getToDoReferences().includes(todoID)) {
+      toProject.addToDoReference(todoID);
+      console.log(`Todo with id ${todoID} moved to project ${toProjectId}`);
+    } else {
       console.warn(
-        `Todo with id ${todoID} is already present in ${toProjectId}`
+        `Todo with id ${todoID} is already in project ${toProjectId}`
       );
-      return;
     }
-
-    if (!fromrefs.includes(todoID)) {
-      console.warn(`Todo with id ${todoID} was not found in ${fromProjectId}`);
-      return;
-    }
-
-    fromproject.removeToDoReference(todoID);
-    toproject.addToDoReference(todoID);
-    console.log(
-      `Todo with id ${todoID} moved from ${fromProjectId} to ${toProjectId}`
-    );
   };
 
   console.log("Project Manager initialized.");

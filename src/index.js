@@ -1,6 +1,6 @@
 import "./styles.css";
 import { UIController } from "./uicontroller";
 
-const ui = UIController();
-
-ui.render();
+const UI = UIController();
+UI.initializeSampleData();
+UI.render();
