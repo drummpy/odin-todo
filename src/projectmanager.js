@@ -2,6 +2,7 @@ import { Project } from "./project.js";
 import { Todo } from "./todo.js";
 import { validateDateInputs, validateStringInputs } from "./validators.js";
 import { parseISO } from "date-fns";
+import { saveData } from "./storagecontoller.js";
 
 //Create Project Manager
 export function ProjectManager() {
@@ -47,6 +48,7 @@ export function ProjectManager() {
     );
     allTodos.push(newTodo);
     console.log(`Todo with title ${titleValue.trim()} added to Todo list.`);
+    saveData(allTodos, allProjects);
 
     // If a projectID is provided, associate the Todo with the project
     if (projectID) {
@@ -80,6 +82,7 @@ export function ProjectManager() {
     }
     Object.assign(todo, updates);
     console.log(`Todo with id ${id} updated.`);
+    saveData(allTodos, allProjects);
   };
 
   const toggleToDoComplete = (id) => {
@@ -90,6 +93,7 @@ export function ProjectManager() {
     }
     found.completed = !found.completed;
     console.log(`Todo id ${id} switched completed flag to ${found.completed}`);
+    saveData(allTodos, allProjects);
   };
 
   const removeToDo = (id) => {
@@ -101,6 +105,7 @@ export function ProjectManager() {
       allProjects.forEach((project) => {
         project.removeToDoReference(id);
       });
+      saveData(allTodos, allProjects);
     }
   };
 
@@ -113,6 +118,7 @@ export function ProjectManager() {
     allProjects.push(newProject);
     console.log(`Project created:`, newProject);
     console.log(`All projects:`, allProjects); // Debugging log
+    saveData(allTodos, allProjects);
     return newProject;
   };
 
@@ -128,6 +134,7 @@ export function ProjectManager() {
 
       allProjects.splice(index, 1);
       console.log(`ID ${id} removed from project list`);
+      saveData(allTodos, allProjects);
     } else {
       console.warn(`Unable to find & delete project ID ${id}`);
     }
@@ -158,6 +165,7 @@ export function ProjectManager() {
     if (!alreadylinked) {
       project.addToDoReference(todoID);
       console.log(`Todo ID ${todoID} linked with project ID ${projectID}`);
+      saveData(allTodos, allProjects);
     } else {
       console.warn(
         `Unable to link todo with ID ${todoID} to project, already present`
@@ -186,6 +194,7 @@ export function ProjectManager() {
     if (!toProject.getToDoReferences().includes(todoID)) {
       toProject.addToDoReference(todoID);
       console.log(`Todo with id ${todoID} moved to project ${toProjectId}`);
+      saveData(allTodos, allProjects);
     } else {
       console.warn(
         `Todo with id ${todoID} is already in project ${toProjectId}`
