@@ -24,12 +24,36 @@ export function StorageController() {
   const saveData = (todoList, projectList) => {
     const data = { todos: todoList, projects: projectList };
     if (storageAvailable("localStorage")) {
-      localStorage.setItem("todoStorage", JSON.stringify(data));
+      localStorage.setItem("todoAppData", JSON.stringify(data));
+      console.log(`Data saved: ${data}`);
     } else {
       console.warn("Unable to save data.");
     }
   };
-  // TODO: Implement load data and deserialize
 
-  return { saveData };
+  const loadData = () => {
+    if (storageAvailable("localStorage")) {
+      const rawData = localStorage.getItem("todoAppData");
+      if (!rawData) return { todos: [], projects: [] }; // No Data Stored yet
+
+      const parsedData = JSON.parse(rawData);
+
+      const todos = parsedData.todos.map(Todo.fromJSON);
+      const projects = parsedData.projects.map(Project.fromJSON);
+      console.log(`Data loaded.`);
+      return { todos, projects };
+    } else {
+      console.warn("Unable to load data.");
+      return { todos: [], projects: [] };
+    }
+  };
+
+  const clearData = () => {
+    if (storageAvailable("localStorage")) {
+      localStorage.removeItem("todoAppData");
+      console.log("Data cleared");
+    }
+  };
+
+  return { saveData, loadData, clearData };
 }

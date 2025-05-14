@@ -36,10 +36,10 @@ export function UIController() {
     content.appendChild(projectDiv);
 
     // Debug: Log the Todos associated with the project
-    console.log(
-      `Rendering Todos for Project ID ${project.getProjectId()}:`,
-      project.getToDoReferences()
-    );
+    // console.log(
+    //   `Rendering Todos for Project ID ${project.getProjectId()}:`,
+    //   project.getToDoReferences()
+    // );
 
     project.getToDoReferences().forEach((todoID) => {
       const todo = projectManager.getToDo(todoID);
@@ -52,7 +52,7 @@ export function UIController() {
   };
 
   const renderTodo = (toDo, projectID = null) => {
-    console.log(`Rendering Todo: ${toDo.title}, Project ID: ${projectID}`);
+    //console.log(`Rendering Todo: ${toDo.title}, Project ID: ${projectID}`);
     const toDoDiv = document.createElement("div");
     toDoDiv.classList.add("todo-card");
 
@@ -144,6 +144,10 @@ export function UIController() {
     projectDescription.value = "";
   };
 
+  const clearData = () => {
+    projectManager.clearData();
+  };
+
   addToDoButton.addEventListener("click", (event) => {
     event.preventDefault();
     const title = toDoTitle.value;
@@ -189,12 +193,12 @@ export function UIController() {
         "Things to handle at work"
       );
 
-      console.log("Home Project:", homeProject);
-      console.log("Work Project:", workProject);
-      console.log(
-        "All Projects after initialization:",
-        projectManager.listAllProjects()
-      );
+      // console.log("Home Project:", homeProject);
+      // console.log("Work Project:", workProject);
+      // console.log(
+      //   "All Projects after initialization:",
+      //   projectManager.listAllProjects()
+      // );
 
       projectManager.createToDo(
         "Do the laundry",
@@ -218,12 +222,12 @@ export function UIController() {
         workProject.getProjectId()
       );
 
-      console.log(
-        "All Todos after initialization:",
-        projectManager.listAllTodo()
-      );
+      // console.log(
+      //   "All Todos after initialization:",
+      //   projectManager.listAllTodo()
+      // );
     }
   };
 
-  return { render, initializeSampleData };
+  return { render, initializeSampleData, clearData };
 }
