@@ -16,3 +16,14 @@ export function Todo(
     completed: completedValue,
   };
 }
+
+Todo.fromJSON = function (data) {
+  return Todo(
+    data.title,
+    data.description,
+    new Date(data.dueDate),
+    data.priority,
+    data.id,
+    data.completed
+  );
+};

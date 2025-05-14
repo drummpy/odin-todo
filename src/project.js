@@ -45,3 +45,7 @@ export function Project(
     toJSON,
   };
 }
+
+Project.fromJSON = function (data) {
+  return Project(data.title, data.description, data.projectId, data.todoIds);
+};
