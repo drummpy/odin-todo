@@ -52,7 +52,6 @@ export function UIController() {
   };
 
   const renderTodo = (toDo, projectID = null) => {
-    //console.log(`Rendering Todo: ${toDo.title}, Project ID: ${projectID}`);
     const toDoDiv = document.createElement("div");
     toDoDiv.classList.add("todo-card");
 
@@ -71,7 +70,9 @@ export function UIController() {
             <h4>${toDo.title}</h4>
             <div class="todo-actions">
                 <label>
-                <input type="checkbox" id="done-${toDo.id}"/>
+                <input type="checkbox" id="done-${toDo.id}" ${
+      toDo.completed ? "checked" : ""
+    }/>
                 Done
                 </label>
                 <select id="move-${toDo.id}">
@@ -100,8 +101,9 @@ export function UIController() {
     const doneSelector = toDoDiv.querySelector(`#done-${toDo.id}`);
     doneSelector.addEventListener("change", () => {
       projectManager.toggleToDoComplete(toDo.id);
-      render();
+      render(); // Re-render to reflect the updated state
     });
+
     const moveSelector = toDoDiv.querySelector(`#move-${toDo.id}`);
     moveSelector.addEventListener("change", (e) => {
       const newProjectID = e.target.value;
