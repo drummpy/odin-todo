@@ -1,11 +1,18 @@
 //Create Project Object
-export function Project(titleValue, descriptionValue) {
-  const todoIds = [];
-  const projectId = crypto.randomUUID();
+export function Project(
+  titleValue,
+  descriptionValue,
+  idValue = crypto.randomUUID(),
+  todoReferences = []
+) {
+  const todoIds = todoReferences;
+  const projectId = idValue;
+  const title = titleValue;
+  const description = descriptionValue;
 
   const getProjectId = () => projectId;
-  const getTitle = () => titleValue;
-  const getDescription = () => descriptionValue;
+  const getTitle = () => title;
+  const getDescription = () => description;
   const getToDoReferences = () => [...todoIds];
 
   const addToDoReference = (id) => {
@@ -25,6 +32,9 @@ export function Project(titleValue, descriptionValue) {
     }
   };
 
+  //Returns these items for JSON stringify instead of whole object, must be named this
+  const toJSON = () => ({ projectId, title, description, todoIds });
+
   return {
     getTitle,
     getDescription,
@@ -32,5 +42,6 @@ export function Project(titleValue, descriptionValue) {
     addToDoReference,
     removeToDoReference,
     getToDoReferences,
+    toJSON,
   };
 }

@@ -3,14 +3,16 @@ export function Todo(
   titleValue,
   descriptionValue,
   dueDateValue,
-  priorityValue
+  priorityValue,
+  idValue = crypto.randomUUID(),
+  completedValue = false
 ) {
   return {
-    id: crypto.randomUUID(),
+    id: idValue,
     title: titleValue,
     description: descriptionValue,
     dueDate: dueDateValue,
     priority: priorityValue,
-    completed: false,
+    completed: completedValue,
   };
 }
